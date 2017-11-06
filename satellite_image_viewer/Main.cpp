@@ -29,8 +29,6 @@ int main(int argc, char** argv)
     // Arguments
     fname = argv[1];
     c = atoi(argv[2]);
-	//fname = "A:\\Hisa\\Pictures\\Dataset\\Optical\\ALOS AVNIR-2\\GEOTIFF_RPC_AV2\\GeoTIFF_RPC_AV2\\IMG-01-ALAV2A134782730_O1B2R_U.tif";
-	//c = 1;
 
 	if (argc == 7)
 	{
@@ -53,14 +51,6 @@ int main(int argc, char** argv)
 		// Show
 		satellite_image_viewer(image);
 	}
-
-	//const int r = 10;
-	//cv::namedWindow("test", cv::WINDOW_KEEPRATIO);
-	//cv::imshow("test", image);
-	//cv::resizeWindow("test", image.cols / r, image.rows / r);
-	//cv::waitKey(0);
-	//cv::destroyAllWindows();
-
 
     return 0;
 }
