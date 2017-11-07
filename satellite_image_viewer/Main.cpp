@@ -14,6 +14,7 @@
 cv::Mat_<Type> satellite_image_reader(char* _fname, int _c);
 cv::Mat_<Type> satellite_image_reader(char* _fname, int _c, int _x1, int _y1, int _x2, int _y2);
 int satellite_image_viewer(cv::Mat& _img);
+vector<cv::Point2i> clipImage(Params* _p);
 
 
 /*-----------------------------------------------------------------------------
@@ -26,13 +27,19 @@ int main(int argc, char** argv)
     int c, x1, y1, x2, y2;
     cv::Mat_<Type> image;
 
+	cout
+		<< "\n*** USAGE ***\n"
+		<< "Case1:\n"
+		<< "  $ satellite_image_viewer.exe [filename] [Band num]\n"
+		<< "Case2: ROI is given\n"
+		<< "  $ satellite_image_viewer.exe [filename] [Band num] [x1] [y1] [x2] [y2]\n\n"
+		<< "*[Band num] starts at 1, not 0.\n\n";
+
     // Arguments
     fname = argv[1];
     c = atoi(argv[2]);
-	//fname = "A:\\Hisa\\Pictures\\Dataset\\Optical\\ALOS AVNIR-2\\GEOTIFF_RPC_AV2\\GeoTIFF_RPC_AV2\\IMG-01-ALAV2A134782730_O1B2R_U.tif";
-	//c = 1;
 
-	if (argc == 7)
+	if (argc == 7)	/* ROI is given */
 	{
 		x1 = atoi(argv[3]);
 		y1 = atoi(argv[4]);
@@ -45,22 +52,25 @@ int main(int argc, char** argv)
 		// Show
 		satellite_image_viewer(image);
     }
-	else
+	else /* Specify ROI by mouse */
 	{
 		// Read
-		image = satellite_image_reader(fname, 1);
+		cv::Mat_<Type> prev = satellite_image_reader(fname, c);
+
+		// Mouse parameters
+		Params param;
+		param.img = prev.clone();
+		prev.release();
+
+		// Clipping
+		vector<cv::Point2i> roi = clipImage(&param);
+
+		// Read
+		image = satellite_image_reader(fname, c, roi.at(0).x, roi.at(0).y, roi.at(1).x, roi.at(1).y);
 
 		// Show
 		satellite_image_viewer(image);
 	}
-
-	//const int r = 10;
-	//cv::namedWindow("test", cv::WINDOW_KEEPRATIO);
-	//cv::imshow("test", image);
-	//cv::resizeWindow("test", image.cols / r, image.rows / r);
-	//cv::waitKey(0);
-	//cv::destroyAllWindows();
-
 
     return 0;
 }

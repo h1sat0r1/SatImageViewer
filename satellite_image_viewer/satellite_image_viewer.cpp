@@ -99,8 +99,8 @@ int satellite_image_viewer(cv::Mat& _img)
         frame = cv::Scalar(30, 30, 0);
         
         // Clip
-        scale = CLIP3(0.01, 2.00, scale);
-		exponent = CLIP3(0.01, 2.00, exponent);
+        scale = CLIP3(0.01, 10.00, scale);
+		exponent = CLIP3(-3.00, 3.00, exponent);
 
         // Show texts
 		cvui::text(frame,  20,  29, "SCALE");
@@ -111,7 +111,7 @@ int satellite_image_viewer(cv::Mat& _img)
 		cvui::text(frame, 150, 120, "StdDev: " + to_string(std_disp[0]));
 
 		// Show counters at position
-		cvui::counter(frame, 20, 40, &scale, 0.01);
+		cvui::counter(frame, 20, 40, &scale, 0.05);
 		cvui::counter(frame, 20, 100, &exponent, 0.01);
 
 		// Button
@@ -148,13 +148,13 @@ int satellite_image_viewer(cv::Mat& _img)
 			case CV_WAITKEY_CURSORKEY_RIGHT:
 				break;
 
-			case CV_WAITKEY_CURSORKEY_TOP:
+			case CV_WAITKEY_CURSORKEY_UP:
 				win_width += 40;
 				cv::imshow(WINDOWNAME_IMAGE_WINDOW, img_disp);
 				cv::resizeWindow(WINDOWNAME_IMAGE_WINDOW, win_width, (int)(win_width*ratio));
 				break;
 
-			case CV_WAITKEY_CURSORKEY_BOTTOM:
+			case CV_WAITKEY_CURSORKEY_DOWN:
 				win_width -= 40;
 				cv::imshow(WINDOWNAME_IMAGE_WINDOW, img_disp);
 				cv::resizeWindow(WINDOWNAME_IMAGE_WINDOW, win_width, (int)(win_width*ratio));
