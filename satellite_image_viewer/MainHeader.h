@@ -26,8 +26,8 @@ using namespace std;
 
 
 /* Data Type Definition (追々入力ファイルにしたがって型を自動決定できるようにしたい) */
-using	Type = uchar;       /* uchar, ushort, float */
-#define	DataDepth CV_8U  /* uchar:CV_8U, ushort:CV_16U, float:CV_32F */
+using	Type = ushort;       /* uchar, ushort, float */
+#define	DataDepth CV_16U  /* uchar:CV_8U, ushort:CV_16U, float:CV_32F */
 #define	DataType(n) CV_MAKETYPE((DataDepth),(n))
 
 /* Window names */
@@ -51,6 +51,7 @@ using	Type = uchar;       /* uchar, ushort, float */
 //  Def funcs
 //-------------------------------------------------------------------------------
 #define CLIP3(min,max,a)	(((a)<(min))?(min):(((a)>(max))?(max):(a)))
+#define ADJUST_BRIGHTNESS(i,m,s,e)	(uchar)CLIP3(0,255,255.0*(s)*powf((i),(e))/(m))
 
 
 //-------------------------------------------------------------------------------
@@ -68,4 +69,6 @@ struct Params
 };
 
 #endif
+
+/* EOF */
 

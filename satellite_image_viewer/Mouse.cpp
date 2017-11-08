@@ -43,14 +43,14 @@ cv::Point2i point_ul, point_br;
 void mouseCallBack(int _eventTp, int _x, int _y, int _flags, void* _userdata)
 {
 
-    Params *ptr = static_cast<Params*> (_userdata);
+    Params* ptr = static_cast<Params*> (_userdata);
 
     ptr->x = _x;
     ptr->y = _y;
     ptr->event = _eventTp;
     ptr->flags = _flags;
     
-    cv::Mat     tmp = ptr->img.clone();
+    cv::Mat_<uchar>     tmp = ptr->img.clone();
 
     double aspect = static_cast<float>(tmp.rows) / static_cast<float>(tmp.cols);
 
@@ -93,8 +93,7 @@ void mouseCallBack(int _eventTp, int _x, int _y, int _flags, void* _userdata)
         point_br.y = ptr->y;
         
         if (point_ul.x < point_br.x &&
-            point_ul.y < point_br.y
-           )
+            point_ul.y < point_br.y)
         {
 
 #ifdef _DEBUG_
@@ -107,7 +106,6 @@ void mouseCallBack(int _eventTp, int _x, int _y, int _flags, void* _userdata)
 
     cv::imshow(WINNAME_CLIPPING, tmp);
     cv::resizeWindow(WINDOWNAME_IMAGE_WINDOW, WIN_WIDTH, (int)(WIN_WIDTH * aspect));
-
 }
 
 
@@ -158,3 +156,5 @@ vector<cv::Point2i> clipImage(Params* _p)
 
     return vec_;
 }
+
+/* EOF */

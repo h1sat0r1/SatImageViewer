@@ -15,6 +15,8 @@ cv::Mat_<Type> satellite_image_reader(char* _fname, int _c);
 cv::Mat_<Type> satellite_image_reader(char* _fname, int _c, int _x1, int _y1, int _x2, int _y2);
 int satellite_image_viewer(cv::Mat& _img);
 vector<cv::Point2i> clipImage(Params* _p);
+cv::Mat_<uchar> generateUCharImage(cv::Mat_<Type>& _m);
+
 
 
 /*-----------------------------------------------------------------------------
@@ -55,7 +57,10 @@ int main(int argc, char** argv)
 	else /* Specify ROI by mouse */
 	{
 		// Read
-		cv::Mat_<Type> prev = satellite_image_reader(fname, c);
+		cv::Mat_<Type> src_image = satellite_image_reader(fname, c);
+
+		// Src -> Prev
+		cv::Mat_<uchar> prev = generateUCharImage(src_image);
 
 		// Mouse parameters
 		Params param;
@@ -75,4 +80,4 @@ int main(int argc, char** argv)
     return 0;
 }
 
-//EOF
+/* EOF */

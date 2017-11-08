@@ -205,4 +205,4 @@ cv::Mat_<Type>  satellite_image_reader(char* _fname, int _c, int _x1, int _y1, i
     return m_;
 }
 
-//EOF
+/* EOF */

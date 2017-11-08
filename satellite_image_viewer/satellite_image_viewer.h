@@ -16,14 +16,13 @@
 #include <opencv2/highgui.hpp>	//OpenCV 3.2 or later
 #include "cvui.h"
 #include "MainHeader.h"
+#include <iomanip>
+#include <sstream>
 
 /* Namespace */
 using namespace std;
 
 
-/* Def func */
-#define ADJUST_BRIGHTNESS(i,m,s,e)	(uchar)CLIP3(0,255,255.0*(s)*powf((i),(e))/(m))
-
-
 #endif
 
+/* EOF */

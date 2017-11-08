@@ -26,6 +26,6 @@
 /* Namespace */
 using namespace std;
 
-
-
 #endif
+
+/* EOF */

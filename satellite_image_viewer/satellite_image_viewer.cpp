@@ -10,6 +10,40 @@
 /* include */
 #include "satellite_image_viewer.h"
 
+/*-----------------------------------------------------------------------------
+	cv::Mat_<uchar>
+	generateUCharImage(cv::Mat_<Type>& _m)
+-----------------------------------------------------------------------------*/
+cv::Mat_<uchar> generateUCharImage(cv::Mat_<Type>& _m)
+{
+	// Output
+	cv::Mat_<uchar> m_(_m.size(), 0);
+
+	// Row-Col
+	int col = _m.cols;
+	int row = _m.rows;
+
+	// Ptr
+	Type*	ps;
+	uchar*	pd;
+
+	// Mean
+	cv::Scalar mean = cv::mean(_m);
+
+	for (int j = 0; j < row; j++)
+	{
+		// Ptr
+		ps = _m.ptr<Type>(j);
+		pd = m_.ptr<uchar>(j);
+
+		for (int i = 0; i < col; i++)
+		{
+			pd[i] = ADJUST_BRIGHTNESS(ps[i], mean[0], 0.25, 1.0);
+		}
+	}
+
+	return m_;
+}
 
 /*-----------------------------------------------------------------------------
 	stretch(cv::Mat& _img, cv::Mat& _disp, double _m, double _s, double _e)
@@ -57,10 +91,11 @@ int satellite_image_viewer(cv::Mat& _img)
     // Valuables
 	double		scale = 0.30;
 	double		exponent = 1.0;
-	cv::Scalar	mean, std;// = cv::mean(_img)[0];
+	cv::Scalar	mean, std;
 	cv::Scalar	mean_disp, std_disp;
 	double		min = -1.0, max = -1.0;
 	bool		button_Apply = false;
+	bool		button_ImageSave = false;
 
 	// Static values
 	cv::meanStdDev(_img, mean, std);
@@ -84,6 +119,11 @@ int satellite_image_viewer(cv::Mat& _img)
     // Flag for the roop
     bool flag = true;
 
+	// For image save
+	time_t t;
+	tm* lt;
+	stringstream s;
+
 	// Initialize Apply
 	stretch(_img, img_disp, mean[0], scale, exponent);
 
@@ -99,8 +139,8 @@ int satellite_image_viewer(cv::Mat& _img)
         frame = cv::Scalar(30, 30, 0);
         
         // Clip
-        scale = CLIP3(0.01, 10.00, scale);
-		exponent = CLIP3(-3.00, 3.00, exponent);
+        scale = CLIP3(-1000.0, 1000.0, scale);
+		exponent = CLIP3(-1000.0, 1000.0, exponent);
 
         // Show texts
 		cvui::text(frame,  20,  29, "SCALE");
@@ -115,8 +155,8 @@ int satellite_image_viewer(cv::Mat& _img)
 		cvui::counter(frame, 20, 100, &exponent, 0.01);
 
 		// Button
-		button_Apply = cvui::button(frame, 5, 170, 290, 125, "Apply");
-
+		button_Apply = cvui::button(frame, 5, 150, 290, 100, "Apply");
+		button_ImageSave = cvui::button(frame, 5, 255, 290, 40, "Save Image");
 		// Update cvui internal stuff
 		cvui::update();
 
@@ -133,6 +173,30 @@ int satellite_image_viewer(cv::Mat& _img)
 			button_Apply = false;
 			cv::meanStdDev(img_disp, mean_disp, std_disp);
 			cv::minMaxLoc(img_disp, &min, &max);
+		}
+		else if (button_ImageSave)
+		{
+			// Initialize
+			s.str("");
+			s.clear(stringstream::goodbit);
+
+			// Get the time
+			t = time(nullptr);
+
+			// Convert
+			lt = localtime(&t);
+
+			// String
+			s << 1900 + lt->tm_year << "-";
+			s << lt->tm_mon + 1 << "-";
+			s << lt->tm_mday << "_";
+			s << lt->tm_hour << "-";
+			s << lt->tm_min << "-";
+			s << lt->tm_sec;
+			s << ".png";
+
+			cv::imwrite(s.str(), img_disp);
+			cout << "Saved: " + s.str() << endl;
 		}
 		else
 		{
@@ -175,6 +239,30 @@ int satellite_image_viewer(cv::Mat& _img)
 				flag = false;
 				break;
 
+			case 's':
+				// Initialize
+				s.str("");
+				s.clear(stringstream::goodbit);
+
+				// Get the time
+				t = time(nullptr);
+
+				// Convert
+				lt = localtime(&t);
+
+				// String
+				s << 1900 + lt->tm_year << "-";
+				s << lt->tm_mon + 1 << "-";
+				s << lt->tm_mday << "_";
+				s << lt->tm_hour << "-";
+				s << lt->tm_min << "-";
+				s << lt->tm_sec;
+				s << ".png";
+
+				cv::imwrite(s.str(), img_disp);
+				cout << "Saved: " + s.str() << endl;
+				break;
+
 			default:
 				break;
 			}
@@ -193,4 +281,4 @@ int satellite_image_viewer(cv::Mat& _img)
 }
 
 
-//EOF
+/* EOF */
